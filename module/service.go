@@ -133,7 +133,7 @@ func (m *Module) initServiceRegisterConfig(conf *config.ServiceConfig, serviceTy
 		conf.RegisterConfig = new(consul.AgentServiceRegistration)
 	}
 	conf.RegisterConfig.ID = fmt.Sprintf("%s.%s", m.path, uuid.New().String())
-	conf.RegisterConfig.Name = m.path
+	conf.RegisterConfig.Name = fmt.Sprintf("%s.%s", m.path, serviceType)
 	if conf.RegisterConfig.Tags == nil {
 		conf.RegisterConfig.Tags = make([]string, 0)
 	}
