@@ -4,14 +4,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"net"
+	"net/http"
+
 	"github.com/culionbear/watershed/config"
 	"github.com/google/uuid"
 	consul "github.com/hashicorp/consul/api"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health/grpc_health_v1"
-	"io/ioutil"
-	"net"
-	"net/http"
 )
 
 const (
@@ -183,6 +184,17 @@ func (m *Module) GrpcService(conf *config.GrpServiceConfig) error {
 	return service.Serve(listener)
 }
 
-func (m *Module) HttpService() {
-
+func (m *Module) HttpService(conf *config.HttpServiceConfig) error {
+	if conf.Runner == nil {
+		return errors.New("runner is nil")
+	}
+	serviceAddress, err := m.initServiceRegisterConfig(&conf.ServiceConfig, SERVICE_TYPE_HTTP)
+	if err != nil {
+		return err
+	}
+	err = m.handler.Agent().ServiceRegister(conf.RegisterConfig)
+	if err != nil {
+		return err
+	}
+	return conf.Runner(serviceAddress, conf.Port)
 }

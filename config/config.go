@@ -1,9 +1,10 @@
 package config
 
 import (
+	"net"
+
 	consul "github.com/hashicorp/consul/api"
 	"google.golang.org/grpc"
-	"net"
 )
 
 type WatershedConfig struct {
@@ -30,4 +31,9 @@ type ServiceConfig struct {
 type GrpServiceConfig struct {
 	ServiceConfig
 	CallBackFunc func(*grpc.Server) error
+}
+
+type HttpServiceConfig struct {
+	ServiceConfig
+	Runner func(net.IP, int) error
 }
