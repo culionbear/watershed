@@ -170,9 +170,11 @@ func (m *Module) GrpcService(conf *config.GrpServiceConfig) error {
 	}
 	service := grpc.NewServer()
 	grpc_health_v1.RegisterHealthServer(service, new(HealthImpl))
-	err = conf.CallBackFunc(service)
-	if err != nil {
-		return err
+	if conf.CallBackFunc != nil {
+		err = conf.CallBackFunc(service)
+		if err != nil {
+			return err
+		}
 	}
 	listener, err := net.ListenTCP("tcp", &net.TCPAddr{
 		IP:   serviceAddress,

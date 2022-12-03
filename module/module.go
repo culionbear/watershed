@@ -19,7 +19,3 @@ func New(conf *config.ModuleConfig) *Module {
 		handler: conf.ConsulClient,
 	}
 }
-
-func (m *Module) IsModuleExists() bool {
-	m.handler.Agent()
-}
