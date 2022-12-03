@@ -19,3 +19,7 @@ func New(conf *config.ModuleConfig) *Module {
 		handler: conf.ConsulClient,
 	}
 }
+
+func (m *Module)GetPath() string {
+	return m.path
+}
