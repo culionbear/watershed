@@ -2,6 +2,7 @@ package config
 
 import (
 	"net"
+	"net/http"
 
 	consul "github.com/hashicorp/consul/api"
 	"google.golang.org/grpc"
@@ -35,5 +36,5 @@ type GrpServiceConfig struct {
 
 type HttpServiceConfig struct {
 	ServiceConfig
-	Runner func(net.IP, int) error
+	Runner func(address net.IP, port int, healthPath string, handler func(http.ResponseWriter, *http.Request)) error
 }

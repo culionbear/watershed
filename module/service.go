@@ -134,7 +134,7 @@ func (m *Module) initServiceRegisterConfig(conf *config.ServiceConfig, serviceTy
 		conf.RegisterConfig = new(consul.AgentServiceRegistration)
 	}
 	conf.RegisterConfig.ID = fmt.Sprintf("%s.%s", m.path, uuid.New().String())
-	conf.RegisterConfig.Name = fmt.Sprintf("%s.%s", m.path, serviceType)
+	conf.RegisterConfig.Name = m.path
 	if conf.RegisterConfig.Tags == nil {
 		conf.RegisterConfig.Tags = make([]string, 0)
 	}
@@ -196,5 +196,10 @@ func (m *Module) HttpService(conf *config.HttpServiceConfig) error {
 	if err != nil {
 		return err
 	}
-	return conf.Runner(serviceAddress, conf.Port)
+	return conf.Runner(serviceAddress, conf.Port, "/health", m.httpHealthCheck)
+}
+
+func (m *Module) httpHealthCheck(w http.ResponseWriter, _ *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(`{"msg":"success"}`))
 }
